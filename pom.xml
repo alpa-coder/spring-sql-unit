@@ -1,23 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
+    <parent>
+        <groupId>org.sonatype.oss</groupId>
+        <artifactId>oss-parent</artifactId>
+        <version>7</version>
+    </parent>
     <groupId>be.jacobsvanroy</groupId>
     <artifactId>spring-sql-unit</artifactId>
-    <version>0.2-SNAPSHOT</version>
-
-    <scm>
-        <connection>scm:git:git://github.com:davyvanroy/spring-sql-unit.git</connection>
-        <developerConnection>scm:git:git@github.com:davyvanroy/spring-sql-unit.git</developerConnection>
-        <url>https://github.com/davyvanroy/spring-sql-unit</url>
-    </scm>
-
+    <version>0.3-SNAPSHOT</version>
+    <packaging>jar</packaging>
+    <name>Spring SQL Unit</name>
+    <description>Utility to facilitate running sql files from integration tests.</description>
+    <url>https://jacobsvanroy.be/blog</url>
     <licenses>
         <license>
             <name>GNU General Public License (GPL) version 3.0</name>
             <url>http://www.gnu.org/licenses/gpl-3.0.html</url>
         </license>
     </licenses>
+    <scm>
+        <connection>scm:git:git://github.com:davyvanroy/spring-sql-unit.git</connection>
+        <developerConnection>scm:git:git@github.com:davyvanroy/spring-sql-unit.git</developerConnection>
+        <url>https://github.com/davyvanroy/spring-sql-unit</url>
+    </scm>
+    <developers>
+        <developer>
+            <name>Davy Van Roy</name>
+        </developer>
+    </developers>
 
     <dependencies>
 
