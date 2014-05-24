@@ -272,6 +272,7 @@ public abstract class ScriptUtils {
      *
      * @param script the SQL script
      * @param delim  String delimiting each statement - typically a ';' character
+     * @return true of it contains delimeters, false otherwise
      */
     public static boolean containsSqlScriptDelimiters(String script, String delim) {
         boolean inLiteral = false;
