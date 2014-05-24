@@ -1,0 +1,1 @@
+insert into spring_sql_test (col) values ('dvr2');
