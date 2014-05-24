@@ -8,7 +8,7 @@
     </parent>
     <groupId>be.jacobsvanroy</groupId>
     <artifactId>spring-sql-unit</artifactId>
-    <version>0.3-SNAPSHOT</version>
+    <version>0.4-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>Spring SQL Unit</name>
     <description>Utility to facilitate running sql files from integration tests.</description>
@@ -148,11 +148,6 @@
     </profiles>
 
     <distributionManagement>
-        <snapshotRepository>
-            <id>sonatype-nexus-snapshots</id>
-            <name>Sonatype Nexus snapshot repository</name>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
         <repository>
             <id>sonatype-nexus-staging</id>
             <name>Sonatype Nexus release repository</name>
