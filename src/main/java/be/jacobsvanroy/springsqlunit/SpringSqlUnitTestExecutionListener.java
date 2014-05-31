@@ -4,7 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.test.context.TestContext;
 import org.springframework.test.context.support.AbstractTestExecutionListener;
 
@@ -18,18 +18,18 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- *  Copyright (C) 2014  Davy Van Roy
- *
+ * Copyright (C) 2014  Davy Van Roy
+ * <p/>
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
+ * <p/>
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * <p/>
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see http://www.gnu.org/licenses/.
  */
@@ -106,48 +106,53 @@ public class SpringSqlUnitTestExecutionListener extends AbstractTestExecutionLis
 
     private void runSqlFile(String sqlFile, DataSource dataSource) {
         ClassPathResource resource = new ClassPathResource(sqlFile);
-        if (resource.exists()) {
-            if (isDirectory(resource)) {
-                executeDirectory(dataSource, resource);
+        File scriptFile = getFile(resource);
+        runSqlFile(scriptFile, dataSource);
+    }
+
+    private void runSqlFile(File scriptFile, DataSource dataSource) {
+        if (scriptFile.exists()) {
+            if (scriptFile.isDirectory()) {
+                executeDirectory(dataSource, scriptFile);
             } else {
-                executeSqlScript(dataSource, resource);
+                executeSqlScript(dataSource, scriptFile);
             }
         } else {
-            throw new RuntimeException("File " + sqlFile + " does not exist");
+            throw new RuntimeException("File " + scriptFile.getPath() + " does not exist");
         }
     }
 
-    private void executeDirectory(DataSource dataSource, ClassPathResource resource) {
-        List<File> files = Arrays.asList(getFile(resource).listFiles());
-        Collections.sort(files, new FileComparator());
+    private File getFile(ClassPathResource resource) {
+        File scriptFile;
+        try {
+            scriptFile = resource.getFile();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return scriptFile;
+    }
+
+    private void executeDirectory(DataSource dataSource, File directory) {
+        List<File> files = getSortedFiles(directory.listFiles());
         for (File file : files) {
-            String classPathLocation = getClassPathLocation(resource, file);
             runSqlFile(
-                    classPathLocation
+                    file
                     , dataSource);
         }
     }
 
-    private void executeSqlScript(DataSource dataSource, Resource resource) {
-        logger.debug("Running sql file: " + resource.getFilename());
-        ScriptUtils.executeSqlScript(dataSource, resource);
-    }
-
-    private String getClassPathLocation(ClassPathResource resource, File f) {
-        int index = f.getPath().indexOf(resource.getPath());
-        return f.getPath().substring(index);
-    }
-
-    private boolean isDirectory(Resource resource) {
-        return getFile(resource).isDirectory();
-    }
-
-    private File getFile(Resource resource) {
-        try {
-            return resource.getFile();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+    private List<File> getSortedFiles(File[] files) {
+        if (files == null) {
+            return new ArrayList<File>();
         }
+        List<File> result = Arrays.asList(files);
+        Collections.sort(result, new FileComparator());
+        return result;
+    }
+
+    private void executeSqlScript(DataSource dataSource, File file) {
+        logger.debug("Running sql file: " + file.getName());
+        ScriptUtils.executeSqlScript(dataSource, new FileSystemResource(file));
     }
 
 }
