@@ -1,8 +1,7 @@
 package be.jacobsvanroy.springsqlunit.method.before;
 
 import be.jacobsvanroy.springsqlunit.IntegrationTest;
-import be.jacobsvanroy.springsqlunit.SqlBefore;
-import org.junit.BeforeClass;
+import be.jacobsvanroy.springsqlunit.SqlSetUp;
 import org.junit.Test;
 
 import static org.fest.assertions.Assertions.assertThat;
@@ -27,7 +26,7 @@ import static org.fest.assertions.Assertions.assertThat;
 public class TestBeforeMethod extends IntegrationTest{
 
     @Test
-    @SqlBefore(files = "scripts/dml_insert.sql")
+    @SqlSetUp(files = "scripts/dml_insert.sql")
     public void testBeforeMethod() throws Exception {
         assertThat(getCount()).isEqualTo(1);
     }

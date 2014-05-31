@@ -50,7 +50,6 @@ public class SpringSqlUnitTestExecutionListener extends AbstractTestExecutionLis
     public void afterTestClass(final TestContext testContext) throws Exception {
         super.afterTestClass(testContext);
         logger.debug("Running after test class");
-        runSqlAfter(testContext.getTestClass().getDeclaredAnnotations(), testContext.getApplicationContext());
     }
 
     @Override
@@ -65,21 +64,12 @@ public class SpringSqlUnitTestExecutionListener extends AbstractTestExecutionLis
     public void afterTestMethod(TestContext testContext) throws Exception {
         super.afterTestMethod(testContext);
         logger.debug("Running after test method");
-        runSqlAfter(testContext.getTestMethod().getDeclaredAnnotations(), testContext.getApplicationContext());
-    }
-
-    private void runSqlAfter(Annotation[] declaredAnnotations, ApplicationContext appContext) {
-        List<Annotation> annotations = getAnnotation(declaredAnnotations, SqlAfter.class);
-        for (Annotation annotation : annotations) {
-            SqlAfter sqlAfterAnnotation = (SqlAfter) annotation;
-            runSqlFiles(appContext, sqlAfterAnnotation.files(), sqlAfterAnnotation.dataSource());
-        }
     }
 
     private void runSqlBefore(Annotation[] declaredAnnotations, ApplicationContext appContext) {
-        List<Annotation> annotations = getAnnotation(declaredAnnotations, SqlBefore.class);
+        List<Annotation> annotations = getAnnotation(declaredAnnotations, SqlSetUp.class);
         for (Annotation annotation : annotations) {
-            SqlBefore sqlBeforeAnnotation = (SqlBefore) annotation;
+            SqlSetUp sqlBeforeAnnotation = (SqlSetUp) annotation;
             runSqlFiles(appContext, sqlBeforeAnnotation.files(), sqlBeforeAnnotation.dataSource());
         }
     }

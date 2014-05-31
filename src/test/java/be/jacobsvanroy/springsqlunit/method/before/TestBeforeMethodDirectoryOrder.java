@@ -1,8 +1,7 @@
 package be.jacobsvanroy.springsqlunit.method.before;
 
 import be.jacobsvanroy.springsqlunit.IntegrationTest;
-import be.jacobsvanroy.springsqlunit.SqlBefore;
-import org.junit.BeforeClass;
+import be.jacobsvanroy.springsqlunit.SqlSetUp;
 import org.junit.Test;
 
 import static org.fest.assertions.Assertions.assertThat;
@@ -28,7 +27,7 @@ import static org.fest.assertions.Assertions.assertThat;
 public class TestBeforeMethodDirectoryOrder extends IntegrationTest {
 
     @Test
-    @SqlBefore(files = "scripts/test_directory")
+    @SqlSetUp(files = "scripts/test_directory")
     public void testBeforeDirectoryCorrectOrder() throws Exception {
         String previous =  "";
         for (String s : getResults()) {

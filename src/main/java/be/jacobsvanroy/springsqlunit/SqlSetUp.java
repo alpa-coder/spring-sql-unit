@@ -29,7 +29,7 @@ import java.lang.annotation.Target;
 //        ElementType.TYPE
         })
 
-public @interface SqlBefore {
+public @interface SqlSetUp {
     String dataSource() default "dataSource";
     String [] files() default {};
 
