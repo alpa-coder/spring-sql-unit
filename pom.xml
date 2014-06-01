@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.sonatype.oss</groupId>
@@ -9,7 +8,7 @@
     </parent>
     <groupId>be.jacobsvanroy</groupId>
     <artifactId>spring-sql-unit</artifactId>
-    <version>0.8-SNAPSHOT</version>
+    <version>0.8</version>
     <packaging>jar</packaging>
     <name>Spring SQL Unit</name>
     <description>Utility to facilitate running sql files from integration tests.</description>
@@ -24,7 +23,8 @@
         <connection>scm:git:git://github.com:davyvanroy/spring-sql-unit.git</connection>
         <developerConnection>scm:git:git@github.com:davyvanroy/spring-sql-unit.git</developerConnection>
         <url>https://github.com/davyvanroy/spring-sql-unit</url>
-    </scm>
+      <tag>spring-sql-unit-0.8</tag>
+  </scm>
     <developers>
         <developer>
             <name>Davy Van Roy</name>
