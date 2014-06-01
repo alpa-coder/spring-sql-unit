@@ -8,7 +8,7 @@
     </parent>
     <groupId>be.jacobsvanroy</groupId>
     <artifactId>spring-sql-unit</artifactId>
-    <version>0.8</version>
+    <version>0.9-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>Spring SQL Unit</name>
     <description>Utility to facilitate running sql files from integration tests.</description>
@@ -23,7 +23,7 @@
         <connection>scm:git:git://github.com:davyvanroy/spring-sql-unit.git</connection>
         <developerConnection>scm:git:git@github.com:davyvanroy/spring-sql-unit.git</developerConnection>
         <url>https://github.com/davyvanroy/spring-sql-unit</url>
-      <tag>spring-sql-unit-0.8</tag>
+      <tag>HEAD</tag>
   </scm>
     <developers>
         <developer>
