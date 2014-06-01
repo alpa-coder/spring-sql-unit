@@ -1,20 +1,17 @@
 package be.jacobsvanroy.springsqlunit;
 
+import be.jacobsvanroy.springsqlunit.annotation.SqlSetUp;
+import be.jacobsvanroy.springsqlunit.sql.SqlExecutor;
+import be.jacobsvanroy.springsqlunit.sql.SqlRunner;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.context.ApplicationContext;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.test.context.TestContext;
 import org.springframework.test.context.support.AbstractTestExecutionListener;
 
 import javax.sql.DataSource;
-import java.io.File;
-import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -39,23 +36,29 @@ public class SpringSqlUnitTestExecutionListener extends AbstractTestExecutionLis
 
     private final Log logger = LogFactory.getLog(this.getClass());
 
+    private SqlRunner sqlRunner;
+
+    public SpringSqlUnitTestExecutionListener() {
+        this.sqlRunner = SqlRunner.of(new SqlExecutor());
+    }
+
     @Override
     public void beforeTestClass(final TestContext testContext) throws Exception {
         super.beforeTestClass(testContext);
-        logger.debug("Running before test class");
+        logger.trace("Running before test class");
         runSqlBefore(testContext.getTestClass().getDeclaredAnnotations(), testContext.getApplicationContext());
     }
 
     @Override
     public void afterTestClass(final TestContext testContext) throws Exception {
         super.afterTestClass(testContext);
-        logger.debug("Running after test class");
+        logger.trace("Running after test class");
     }
 
     @Override
     public void beforeTestMethod(TestContext testContext) throws Exception {
         super.beforeTestMethod(testContext);
-        logger.debug("Running before test method");
+        logger.trace("Running before test method");
         runSqlBefore(testContext.getTestMethod().getDeclaredAnnotations(), testContext.getApplicationContext());
 
     }
@@ -63,14 +66,16 @@ public class SpringSqlUnitTestExecutionListener extends AbstractTestExecutionLis
     @Override
     public void afterTestMethod(TestContext testContext) throws Exception {
         super.afterTestMethod(testContext);
-        logger.debug("Running after test method");
+        logger.trace("Running after test method");
     }
 
     private void runSqlBefore(Annotation[] declaredAnnotations, ApplicationContext appContext) {
         List<Annotation> annotations = getAnnotation(declaredAnnotations, SqlSetUp.class);
         for (Annotation annotation : annotations) {
             SqlSetUp sqlBeforeAnnotation = (SqlSetUp) annotation;
-            runSqlFiles(appContext, sqlBeforeAnnotation.files(), sqlBeforeAnnotation.dataSource());
+            sqlRunner.runSqlFiles(
+                    sqlBeforeAnnotation.files(),
+                    getDataSource(appContext, sqlBeforeAnnotation.dataSource()));
         }
     }
 
@@ -88,61 +93,5 @@ public class SpringSqlUnitTestExecutionListener extends AbstractTestExecutionLis
         return (DataSource) appContext.getBean(dataSource);
     }
 
-    private void runSqlFiles(ApplicationContext appContext, String[] files, String dataSource) {
-        for (String file : files) {
-            runSqlFile(file, getDataSource(appContext, dataSource));
-        }
-    }
-
-    private void runSqlFile(String sqlFile, DataSource dataSource) {
-        ClassPathResource resource = new ClassPathResource(sqlFile);
-        File scriptFile = getFile(resource);
-        runSqlFile(scriptFile, dataSource);
-    }
-
-    private void runSqlFile(File scriptFile, DataSource dataSource) {
-        if (scriptFile.exists()) {
-            if (scriptFile.isDirectory()) {
-                executeDirectory(dataSource, scriptFile);
-            } else {
-                executeSqlScript(dataSource, scriptFile);
-            }
-        } else {
-            throw new RuntimeException("File " + scriptFile.getPath() + " does not exist");
-        }
-    }
-
-    private File getFile(ClassPathResource resource) {
-        File scriptFile;
-        try {
-            scriptFile = resource.getFile();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        return scriptFile;
-    }
-
-    private void executeDirectory(DataSource dataSource, File directory) {
-        List<File> files = getSortedFiles(directory.listFiles());
-        for (File file : files) {
-            runSqlFile(
-                    file
-                    , dataSource);
-        }
-    }
-
-    private List<File> getSortedFiles(File[] files) {
-        if (files == null) {
-            return new ArrayList<File>();
-        }
-        List<File> result = Arrays.asList(files);
-        Collections.sort(result, new FileComparator());
-        return result;
-    }
-
-    private void executeSqlScript(DataSource dataSource, File file) {
-        logger.debug("Running sql file: " + file.getName());
-        ScriptUtils.executeSqlScript(dataSource, new FileSystemResource(file));
-    }
 
 }

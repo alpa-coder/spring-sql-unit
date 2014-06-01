@@ -1,7 +1,7 @@
 package be.jacobsvanroy.springsqlunit.method.before;
 
 import be.jacobsvanroy.springsqlunit.IntegrationTest;
-import be.jacobsvanroy.springsqlunit.SqlSetUp;
+import be.jacobsvanroy.springsqlunit.annotation.SqlSetUp;
 import org.junit.Test;
 
 import static org.fest.assertions.Assertions.assertThat;

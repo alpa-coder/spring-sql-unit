@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package be.jacobsvanroy.springsqlunit;
+package be.jacobsvanroy.springsqlunit.util;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -64,7 +64,7 @@ public abstract class ScriptUtils {
     /**
      * End of file (EOF) SQL statement separator.
      * <p>This value may be supplied as the {@code separator} to {@link
-     * #executeSqlScript(javax.sql.DataSource, EncodedResource, boolean, boolean, String, String, String, String)}
+     * #executeSqlScript(javax.sql.DataSource, EncodedResource, String, String, String, String)}
      * to denote that an SQL script contains a single statement (potentially
      * spanning multiple lines) with no explicit statement separator. Note that
      * such a script should not actually contain this value; it is merely a
@@ -299,7 +299,7 @@ public abstract class ScriptUtils {
      *                   configured and ready to use
      * @param resource   the resource to load the SQL script from; encoded with the
      *                   current platform's default encoding
-     * @see #executeSqlScript(javax.sql.DataSource, EncodedResource, boolean, boolean, String, String, String, String)
+     * @see #executeSqlScript(javax.sql.DataSource, EncodedResource, String, String, String, String)
      * @see #DEFAULT_COMMENT_PREFIX
      * @see #DEFAULT_STATEMENT_SEPARATOR
      * @see #DEFAULT_BLOCK_COMMENT_START_DELIMITER
@@ -320,14 +320,14 @@ public abstract class ScriptUtils {
      *                   configured and ready to use
      * @param resource   the resource (potentially associated with a specific encoding)
      *                   to load the SQL script from
-     * @see #executeSqlScript(DataSource, EncodedResource, boolean, boolean, String, String, String, String)
+     * @see #executeSqlScript(DataSource, EncodedResource, String, String, String, String)
      * @see #DEFAULT_COMMENT_PREFIX
      * @see #DEFAULT_STATEMENT_SEPARATOR
      * @see #DEFAULT_BLOCK_COMMENT_START_DELIMITER
      * @see #DEFAULT_BLOCK_COMMENT_END_DELIMITER
      */
     public static void executeSqlScript(DataSource dataSource, EncodedResource resource) {
-        executeSqlScript(dataSource, resource, false, false, DEFAULT_COMMENT_PREFIX, DEFAULT_STATEMENT_SEPARATOR,
+        executeSqlScript(dataSource, resource, DEFAULT_COMMENT_PREFIX, DEFAULT_STATEMENT_SEPARATOR,
                 DEFAULT_BLOCK_COMMENT_START_DELIMITER, DEFAULT_BLOCK_COMMENT_END_DELIMITER);
     }
 
@@ -341,10 +341,6 @@ public abstract class ScriptUtils {
      *                                   configured and ready to use
      * @param resource                   the resource (potentially associated with a specific encoding)
      *                                   to load the SQL script from
-     * @param continueOnError            whether or not to continue without throwing an exception
-     *                                   in the event of an error
-     * @param ignoreFailedDrops          whether or not to continue in the event of specifically
-     *                                   an error on a {@code DROP} statement
      * @param commentPrefix              the prefix that identifies comments in the SQL script &mdash;
      *                                   typically "--"
      * @param separator                  the script statement separator; defaults to
@@ -360,8 +356,8 @@ public abstract class ScriptUtils {
      * @see #FALLBACK_STATEMENT_SEPARATOR
      * @see #EOF_STATEMENT_SEPARATOR
      */
-    public static void executeSqlScript(DataSource dataSource, EncodedResource resource, boolean continueOnError,
-                                        boolean ignoreFailedDrops, String commentPrefix, String separator, String blockCommentStartDelimiter,
+    public static void executeSqlScript(DataSource dataSource, EncodedResource resource,
+                                        String commentPrefix, String separator, String blockCommentStartDelimiter,
                                         String blockCommentEndDelimiter) {
 
         try {
