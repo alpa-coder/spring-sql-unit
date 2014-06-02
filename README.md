@@ -78,9 +78,10 @@ Now we can alter our existing test to execute this SQL script before the test me
 
 **Congratiulations**! You have now instrumented your test with your sql script!
 
-But how did it know how to execute and what about transactions. 
 
-For the first question, we can find the answer if we look at the annotation:
+DataSource
+---------
+In the example above, a SQL script was executed. But against which database? Let's look at our annotation:
 
     public @interface SqlSetUp {
         String dataSource() default "dataSource";
@@ -89,8 +90,16 @@ For the first question, we can find the answer if we look at the annotation:
     
     }
 
-By default "dataSource" will be used. As many applications use "dataSource" as the bean name for the datasource, this is chosen by default (convention over configuration).  You can of course override this by given it a different name when annotating your method.  
-Explaining the transaction management is easy, whatever you configured will be used. Just make sure transaction configuration is defined and your method (or class) is annotated with @Transactional. In the example above we did this, so every sql file will be rolled back after each test method. This gives us a clean start every step of the way. **So avoid using commits/rollbacks in your sql script. It doesn't make any sense.**
+So by default as dataSource, the bean with name "dataSource" will be used. If you want to use a different datasource, provide a different bean name here in the annotation (and make sure the bean exists within the test context).
+Convention over configuration is the idea here.
+
+Transactions
+---------
+By default, if you have configured a transaction manager in your test and your method is transactional, the SQL script will be executed within this transaction. 
+
+So in the example above, everything will be rolled back because the transactions are configured as default rollback.
+
+Important: if you supply a commit/rollback inside your script, this will be executed. So if you provide a commit, the data that was executed up till that commit will be committed to the database (same for rollback). 
 
 Directories
 ---------
